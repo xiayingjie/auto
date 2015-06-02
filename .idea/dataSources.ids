@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="MySQL - ops@localhost" uuid="fc954ae8-6535-4e20-b209-fa4b0ee28022">
+    <database-info product="MySQL" version="5.6.24" jdbc-version="4.0" driver-name="MySQL Connector Java" driver-version="mysql-connector-java-5.1.35 ( Revision: 5fb9c5849535c13917c2cf9baaece6ef9693ef27 )">
+      <extra-name-characters>#@</extra-name-characters>
+      <identifier-quote-string>`</identifier-quote-string>
+    </database-info>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="upper"/>
+    <schema name="" catalog="lukcy"/>
+    <table name="action" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="actionName" sqlType="VARCHAR" precision="50" scale="0" nullable="true" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="orders" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="path" sqlType="VARCHAR" precision="100" scale="0" nullable="false" jdbcType="12"/>
+      <column name="moduleId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FKAB2F7E364F1BADC7" columns="moduleId" ref-table="module" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <exported-key name="FK6F644E2CFB4C92DB" table="roleaction" schema="" catalog="lukcy" columns="actionId"/>
+      <index name="FKAB2F7E364F1BADC7" unique="false" columns="moduleId"/>
+    </table>
+    <table name="config" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="aliasName" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="jsonConfig" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+    </table>
+    <table name="menu" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="menuName" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="orders" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="parentId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="url" sqlType="VARCHAR" precision="200" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FKF0276AD52AB43FED" table="rolemenu" schema="" catalog="lukcy" columns="menuId"/>
+    </table>
+    <table name="module" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="moduleInfo" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="moduleName" sqlType="VARCHAR" precision="255" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FKAB2F7E364F1BADC7" table="action" schema="" catalog="lukcy" columns="moduleId"/>
+    </table>
+    <table name="prize" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="allCount" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="pic" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="prizeName" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="remainCount" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="type" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FKBE2EF1B61FA258B0" table="winprize" schema="" catalog="lukcy" columns="prizeId"/>
+    </table>
+    <table name="role" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="roleInfo" sqlType="LONGTEXT" precision="2147483647" scale="0" nullable="true" jdbcType="-1"/>
+      <column name="roleName" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FK6F644E2C33CAAC5B" table="roleaction" schema="" catalog="lukcy" columns="roleId"/>
+      <exported-key name="FKF0276AD533CAAC5B" table="rolemenu" schema="" catalog="lukcy" columns="roleId"/>
+      <exported-key name="FKF02B8EC133CAAC5B" table="userrole" schema="" catalog="lukcy" columns="roleId"/>
+    </table>
+    <table name="roleaction" schema="" catalog="lukcy" type="TABLE">
+      <column name="roleId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="actionId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="roleId,actionId"/>
+      <foreign-key name="FK6F644E2C33CAAC5B" columns="roleId" ref-table="role" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FK6F644E2CFB4C92DB" columns="actionId" ref-table="action" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FK6F644E2C33CAAC5B" unique="false" columns="roleId"/>
+      <index name="FK6F644E2CFB4C92DB" unique="false" columns="actionId"/>
+    </table>
+    <table name="rolemenu" schema="" catalog="lukcy" type="TABLE">
+      <column name="roleId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="menuId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="roleId,menuId"/>
+      <foreign-key name="FKF0276AD52AB43FED" columns="menuId" ref-table="menu" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FKF0276AD533CAAC5B" columns="roleId" ref-table="role" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FKF0276AD52AB43FED" unique="false" columns="menuId"/>
+      <index name="FKF0276AD533CAAC5B" unique="false" columns="roleId"/>
+    </table>
+    <table name="userinfo" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="email" sqlType="VARCHAR" precision="100" scale="0" nullable="true" jdbcType="12"/>
+      <column name="userName" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <column name="userPassword" sqlType="VARCHAR" precision="50" scale="0" nullable="false" jdbcType="12"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <exported-key name="FKF02B8EC1D03F313" table="userrole" schema="" catalog="lukcy" columns="userId"/>
+    </table>
+    <table name="userrole" schema="" catalog="lukcy" type="TABLE">
+      <column name="userId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <column name="roleId" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="userId,roleId"/>
+      <foreign-key name="FKF02B8EC133CAAC5B" columns="roleId" ref-table="role" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <foreign-key name="FKF02B8EC1D03F313" columns="userId" ref-table="userinfo" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FKF02B8EC133CAAC5B" unique="false" columns="roleId"/>
+      <index name="FKF02B8EC1D03F313" unique="false" columns="userId"/>
+    </table>
+    <table name="winprize" schema="" catalog="lukcy" type="TABLE">
+      <column name="id" sqlType="INT" precision="10" scale="0" nullable="false" jdbcType="4" autoIncrement="true"/>
+      <column name="content" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="createTime" sqlType="DATETIME" precision="19" scale="0" nullable="false" jdbcType="93"/>
+      <column name="phone" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="taid" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="userName" sqlType="VARCHAR" precision="255" scale="0" nullable="true" jdbcType="12"/>
+      <column name="prizeId" sqlType="INT" precision="10" scale="0" nullable="true" jdbcType="4"/>
+      <primary-key name="PRIMARY" columns="id"/>
+      <foreign-key name="FKBE2EF1B61FA258B0" columns="prizeId" ref-table="prize" ref-schema="" ref-catalog="lukcy" ref-columns="id" update-rule="3" delete-rule="3" deferrability="2"/>
+      <index name="FKBE2EF1B61FA258B0" unique="false" columns="prizeId"/>
+    </table>
+  </data-source>
+</component>

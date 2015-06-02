@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+
+       ">
+
+	<description>Spring公共配置 </description>
+    <context:property-placeholder ignore-unresolvable="true"
+                                  location="classpath*:db.properties" />
+
+	<!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired,@service,@repository的属性被注入 -->
+	<context:component-scan base-package="com.common.manage.service">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+	</context:component-scan>
+
+    <!-- Spring Data Jpa配置 -->
+    <jpa:repositories base-package="com.common.manage.dao.account"  transaction-manager-ref="transactionManager" entity-manager-factory-ref="entityManagerFactory"/>
+
+    <bean id="hibernateJpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="databasePlatform" value="${hibernate.dialect}"/>
+    </bean>
+
+    <!-- Jpa Entity Manager 配置 -->
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="jpaVendorAdapter" ref="hibernateJpaVendorAdapter"/>
+		<property name="packagesToScan" value="com.common.manage.entity"/>
+<property name="jpaProperties">
+			<props>
+				<!-- 命名规则 My_NAME->MyName
+				<prop key="hibernate.ejb.naming_strategy">org.hibernate.cfg.ImprovedNamingStrategy</prop>
+				 -->
+                <!-- 用于调试的属性 -->
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <!--hibernate二级缓存 -->
+                <prop key="hibernate.cache.use_query_cache">true</prop>
+                <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+                <!--<prop key="hibernate.enable_lazy_load_no_trans">true</prop>-->
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">classpath*:cache/ehcache.xml</prop>
+                <prop key="hibernate.current_session_context_class">thread</prop>
+                <!--<prop key="hibernate.hbm2ddl.auto">create</prop>-->
+
+                <!--关闭jsr-303验证 使用自定义验证
+                <prop key="javax.persistence.validation.mode">NONE</prop>
+                <prop key="javax.persistence.validation.factory">validator</prop>
+                -->
+                <!--不扫描hbm,这里全是注解 -->
+                <prop key="hibernate.archive.autodetection">class</prop>
+
+            </props>
+		</property>
+	</bean>
+
+
+    <bean class="org.springframework.orm.hibernate4.HibernateExceptionTranslator"/>
+
+    <!-- Jpa 事务配置 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory"/>
+	</bean>
+
+    <!-- 使用annotation定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true" />
+
+
+
+	<!-- JSR303 Validator定义 -->
+ 	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+    <!--使用阿里巴巴的连接池-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${jdbc.pool.initSize}" />
+        <property name="minIdle" value="${jdbc.pool.maxIdle}" />
+        <property name="maxActive" value="${jdbc.pool.maxActive}" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+        -->
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="stat" />
+    </bean>
+
+
+
+
+
+
+</beans>
